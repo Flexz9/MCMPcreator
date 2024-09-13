@@ -1,0 +1,19 @@
+<div>
+    <input [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Search items" />
+
+    @if(results.length > 0) {
+    <div>
+        <ul>
+            @for(item of results; track item.name) {
+            <li>
+                {{ item.name }}
+                <button (click)="addCurseForgeMod(item.name, item.id, item.logo.thumbnailUrl)">Add</button>
+            </li>
+            }
+        </ul>
+    </div>
+    }
+</div>
+
+<!-- Added Items List -->
+<app-added-items [items]="modService.getmodList()" (deleteItem)="deleteItem($event)"></app-added-items>

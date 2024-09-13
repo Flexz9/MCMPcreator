@@ -1,0 +1,19 @@
+@if(items.length > 0) {
+<div>
+    <ul>
+        @for(item of items; track item.name; let i = $index) {
+        <li>
+            {{ item.name }}
+            <!-- 
+            <select [(ngModel)]="item.selectedVersion">
+                @for(version of item.versions; track version) {
+                <option [value]="version">{{ version }}</option>
+                }
+            </select>
+            -->
+            <button (click)="removeItem(item.name)">Delete</button>
+        </li>
+        }
+    </ul>
+</div>
+}
