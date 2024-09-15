@@ -16,7 +16,7 @@ export class ModService {
     const savedVersion = localStorage.getItem('version');
     const savedModList = localStorage.getItem('modList');
 
-    this.modLoader = savedModLoader || 'neoForge';
+    this.modLoader = savedModLoader || 'Forge';
     this.version = savedVersion || '1.20.1';
 
     if (savedModList) {
@@ -108,7 +108,7 @@ export class ModService {
       const jsonData = pako.inflate(compressedData, { to: 'string' });
       const data = JSON.parse(jsonData);
 
-      this.modLoader = data.modLoader || 'neoForge';
+      this.modLoader = data.modLoader || 'Forge';
       this.version = data.version || '1.20.1';
       this.modList = data.modList || [];
 

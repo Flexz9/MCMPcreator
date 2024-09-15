@@ -41,7 +41,7 @@ export class SearchComponent {
   }
 
   onSearchCurseForge() {
-    const apiUrl = `https://api.curse.tools/v1/cf/mods/search?gameId=432&gameVersions=["1.20.1"]&searchFilter=${this.searchCurseForge}&sortField=2&sortOrder=desc&pageSize=10`;
+    const apiUrl = `https://api.curse.tools/v1/cf/mods/search?gameId=432&modLoaderType=${this.modService.getModLoader()}&gameVersions=["${this.modService.getVersion()}"]&searchFilter=${this.searchCurseForge}&sortField=2&sortOrder=desc&pageSize=10`;
 
     this.http.get<any[]>(apiUrl).subscribe(response => {
       this.resultsCurseForge = (<any>response).data;
@@ -50,7 +50,7 @@ export class SearchComponent {
   }
 
   onSearchModrinth() {
-    const apiUrl = `https://api.modrinth.com/v2/search?facets=[["categories:forge"],["versions:1.20.1"],["project_type:mod"]]&query=${this.searchModrinth}`;
+    const apiUrl = `https://api.modrinth.com/v2/search?facets=[["categories:${this.modService.getModLoader().toLowerCase()}"],["versions:${this.modService.getVersion()}"],["project_type:mod"]]&query=${this.searchModrinth}`;
 
     this.http.get<any[]>(apiUrl).subscribe(response => {
       this.resultsModrinth = (<any>response).hits;
@@ -77,7 +77,7 @@ export class SearchComponent {
     this.modService.add(mod);
 
 
-    const apiUrl = `https://api.curse.tools/v1/cf/mods/search?gameId=432&gameVersions=["1.20.1"]&slug=${slug}&sortField=2&sortOrder=desc`;
+    const apiUrl = `https://api.curse.tools/v1/cf/mods/search?gameId=432&slug=${slug}`;
 
     this.http.get<any[]>(apiUrl).subscribe(response => {
       let resultsCurseForge: any[] = (<any>response).data;
