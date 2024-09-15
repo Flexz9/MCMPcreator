@@ -4,6 +4,7 @@ import { AddedItemsComponent } from '../added-items/added-items.component';
 import { FormsModule } from '@angular/forms';
 import { Mod } from '../data/mod.model';
 import { ModService } from '../data/mod.service';
+import { AnimationKeyframesSequenceMetadata } from '@angular/animations';
 
 @Component({
   selector: 'app-search',
@@ -13,32 +14,66 @@ import { ModService } from '../data/mod.service';
   styleUrl: './search.component.css'
 })
 export class SearchComponent {
-  searchTerm: string = '';
-  results: any[] = [];
-  addedItems: any[] = [];
+  searchCurseForge: string = '';
+  searchModrinth: string = '';
+
+  resultsCurseForge: any[] = [];
+  resultsModrinth: any[] = [];
 
   constructor(private http: HttpClient, public modService: ModService) { }
 
-  onSearch() {
-    const apiUrl = `https://api.curse.tools/v1/cf/mods/search?gameId=432&gameVersions=["1.20.1"]&searchFilter=${this.searchTerm}&sortField=2&sortOrder=desc`;
+  onSearchCurseForge() {
+    const apiUrl = `https://api.curse.tools/v1/cf/mods/search?gameId=432&gameVersions=["1.20.1"]&searchFilter=${this.searchCurseForge}&sortField=2&sortOrder=desc&pageSize=10`;
 
     this.http.get<any[]>(apiUrl).subscribe(response => {
-      this.results = (<any>response).data;
-      console.log(this.results);
+      this.resultsCurseForge = (<any>response).data;
+      console.log(this.resultsCurseForge);
     });
   }
 
-  addCurseForgeMod(name: string, id: string, img: string) {
-    let mod: Mod = { name: name, description: '', img: img, curseForgeId: id, isClientside: true, isRequired: true, isServerSide: true};
-    this.modService.add(mod);
+  onSearchModrinth() {
+    const apiUrl = `https://api.modrinth.com/v2/search?facets=[["categories:forge"],["versions:1.20.1"],["project_type:mod"]]&query=${this.searchModrinth}`;
+
+    this.http.get<any[]>(apiUrl).subscribe(response => {
+      this.resultsModrinth = (<any>response).hits;
+      console.log(this.resultsModrinth);
+    });
   }
 
-  addModrinthMod(name: string, id: string, img: string) {
-    let mod: Mod = { name: name, description: '', img: img, modrinthId: id, isClientside: true, isRequired: true, isServerSide: true};
+  addCurseForgeMod(slug: string, name: string, id: string, img: string) {
+    let mod: Mod = { slug: slug, name: name, description: '', img: img, curseForgeId: id, isClientside: true, isRequired: true, isServerSide: true};
     this.modService.add(mod);
+
+    const apiUrl = `https://api.modrinth.com/v2/project/${slug}`;
+
+    this.http.get<any[]>(apiUrl).subscribe(response => {
+      let resultsModrinth = (<any>response);
+      
+      let mod: Mod = { slug: slug, name: name, description: '', img: img, modrinthId: resultsModrinth.id, isClientside: true, isRequired: true, isServerSide: true};
+      this.modService.add(mod);
+    });
   }
 
-  deleteItem(name: string) {
-    this.modService.remove(name);
+  addModrinthMod(slug: string, name: string, id: string, img: string) {
+    let mod: Mod = { slug: slug, name: name, description: '', img: img, modrinthId: id, isClientside: true, isRequired: true, isServerSide: true};
+    this.modService.add(mod);
+
+
+    const apiUrl = `https://api.curse.tools/v1/cf/mods/search?gameId=432&gameVersions=["1.20.1"]&slug=${slug}&sortField=2&sortOrder=desc`;
+
+    this.http.get<any[]>(apiUrl).subscribe(response => {
+      let resultsCurseForge: any[] = (<any>response).data;
+
+      resultsCurseForge.forEach(element => {
+        if (element.slug == slug) {
+          let mod: Mod = { slug: slug, name: name, description: '', img: img, curseForgeId: element.id, isClientside: true, isRequired: true, isServerSide: true};
+          this.modService.add(mod);
+        }
+      });
+    });
+  }
+
+  deleteItem(slug: string) {
+    this.modService.remove(slug);
   }
 }

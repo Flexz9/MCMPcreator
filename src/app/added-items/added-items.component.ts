@@ -13,7 +13,7 @@ export class AddedItemsComponent {
   @Input() items: Mod[] = [];
   @Output() deleteItem = new EventEmitter<string>();
 
-  removeItem(name: string) {
-    this.deleteItem.emit(name);
+  removeItem(slug: string) {
+    this.deleteItem.emit(slug);
   }
 }

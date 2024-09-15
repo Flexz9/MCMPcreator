@@ -13,25 +13,27 @@ export class ModService {
     return this.modList;
   }
 
-  modExists(name: string): Mod | null {
-    return this.modList.find(obj => obj.name.toLowerCase() === name.toLowerCase()) || null;
+  modExists(slug: string): Mod | null {
+    return this.modList.find(obj => obj.slug.toLowerCase() === slug.toLowerCase()) || null;
   }
 
   add(mod: Mod): void {
-    let modExists = this.modExists(mod.name);
+    let modExists = this.modExists(mod.slug);
     if (modExists) {
-      if (modExists.curseForgeId) {
-        modExists.curseForgeId = modExists.curseForgeId;
+      if (mod.curseForgeId) {
+        modExists.curseForgeId = mod.curseForgeId;
       }
-      if (modExists.modrinthId) {
-        modExists.modrinthId = modExists.modrinthId;
+      if (mod.modrinthId) {
+        modExists.modrinthId = mod.modrinthId;
       }
     } else {
       this.modList.push(mod);
     }
+
+    console.log(this.modList);
   }
 
-  remove(name: string): void {
-    this.modList = this.modList.filter(mod => mod.name !== name);
+  remove(slug: string): void {
+    this.modList = this.modList.filter(mod => mod.slug !== slug);
   }
 }

@@ -1,18 +1,37 @@
-<div>
-    <input [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Search items" />
+<div class="row">
+    <div class="col-md-6">
+        <input [(ngModel)]="searchCurseForge" (input)="onSearchCurseForge()" placeholder="Search items" />
 
-    @if(results.length > 0) {
-    <div>
-        <ul>
-            @for(item of results; track item.name) {
-            <li>
-                {{ item.name }}
-                <button (click)="addCurseForgeMod(item.name, item.id, item.logo.thumbnailUrl)">Add</button>
-            </li>
-            }
-        </ul>
+        @if(resultsCurseForge.length > 0) {
+        <div>
+            <ul>
+                @for(item of resultsCurseForge; track item.slug) {
+                <li>
+                    {{ item.name }}
+                    <button (click)="addCurseForgeMod(item.slug, item.name, item.id, item.logo.thumbnailUrl)">Add</button>
+                </li>
+                }
+            </ul>
+        </div>
+        }
     </div>
-    }
+
+    <div class="col-md-6">
+        <input [(ngModel)]="searchModrinth" (input)="onSearchModrinth()" placeholder="Search items" />
+
+        @if(resultsModrinth.length > 0) {
+        <div>
+            <ul>
+                @for(item of resultsModrinth; track item.slug) {
+                <li>
+                    {{ item.title }}
+                    <button (click)="addModrinthMod(item.slug, item.title, item.project_id, item.icon_url)">Add</button>
+                </li>
+                }
+            </ul>
+        </div>
+        }
+    </div>
 </div>
 
 <!-- Added Items List -->

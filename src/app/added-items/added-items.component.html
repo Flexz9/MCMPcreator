@@ -1,7 +1,7 @@
 @if(items.length > 0) {
 <div>
     <ul>
-        @for(item of items; track item.name; let i = $index) {
+        @for(item of items; track item.slug) {
         <li>
             {{ item.name }}
             <!-- 
@@ -11,7 +11,7 @@
                 }
             </select>
             -->
-            <button (click)="removeItem(item.name)">Delete</button>
+            <button (click)="removeItem(item.slug)">Delete</button>
         </li>
         }
     </ul>
