@@ -4,7 +4,7 @@ import { AddedItemsComponent } from '../added-items/added-items.component';
 import { FormsModule } from '@angular/forms';
 import { Mod } from '../data/mod.model';
 import { ModService } from '../data/mod.service';
-import { AnimationKeyframesSequenceMetadata } from '@angular/animations';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -20,7 +20,25 @@ export class SearchComponent {
   resultsCurseForge: any[] = [];
   resultsModrinth: any[] = [];
 
-  constructor(private http: HttpClient, public modService: ModService) { }
+  shareableLink: string = '';
+
+  constructor(private http: HttpClient, public modService: ModService, private route: ActivatedRoute) { }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const encodedData = params['data'];
+      if (encodedData) {
+        this.modService.loadFromShareableLink(encodedData);
+      }
+    });
+
+    this.generateLink();
+  }
+
+  generateLink(): void {
+    this.shareableLink = this.modService.generateShareableLink();
+    console.log('Generated Shareable Link:', this.shareableLink);
+  }
 
   onSearchCurseForge() {
     const apiUrl = `https://api.curse.tools/v1/cf/mods/search?gameId=432&gameVersions=["1.20.1"]&searchFilter=${this.searchCurseForge}&sortField=2&sortOrder=desc&pageSize=10`;
